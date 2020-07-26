@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a1df0f85d43540446913c2573bed5705
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ground: {instanceID: 0}
+  - overlay: {instanceID: 0}
+  - tilemap_road: {instanceID: 0}
+  - overlayTile: {instanceID: 0}
+  - road: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
