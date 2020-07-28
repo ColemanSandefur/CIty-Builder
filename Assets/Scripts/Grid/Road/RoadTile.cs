@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RoadDisplay : MonoBehaviour
+public class RoadTile : GridTile
 {
-    public RoadTileManager roadTileManager;
+    public RoadGrid roadGrid;
     public SpriteMask spriteMask;
-    public SpriteRenderer spriteRenderer;
     public Sprite roadMaterial;
     public int currentMaskIndex;
     public Sprite[] m_Sprites;
-    public Vector3Int location;
-    public RoadMesh roadMesh;
 
     //Pathfinding
     public int gCost;
     public int hCost;
     public int fCost;
-    public RoadDisplay cameFromNode;
+    public RoadTile cameFromNode;
 
     void Start() {
         spriteRenderer.sprite = roadMaterial;
@@ -32,34 +29,20 @@ public class RoadDisplay : MonoBehaviour
     /*
         Tile Update Functions
     */
-    public void Refresh(Tilemap tilemap, Vector3Int location) {
-        spriteMask.sprite = GetCurrentSprite(location, tilemap);
+    public override void Refresh(Vector3Int location, Grid grid) {
+        spriteMask.sprite = GetCurrentSprite(location, grid);
         spriteRenderer.sprite = roadMaterial;
     }
 
-    public bool HasRoadTile(Tilemap grid, Vector3Int position) {
-
-        if (roadTileManager.roads.ContainsKey(position)) {
-            return true;
-        }
-        // Transform parent = grid.transform;
-        // var childCount = parent.childCount;
-        // for (var i = 0; i < childCount; i++)
-        // {
-        //     var child = parent.GetChild(i);
-        //     if (position == grid.WorldToCell(child.position) && child.GetComponent<RoadDisplay>() != null)
-        //     {
-        //         return true;
-        //     }
-        // }
-        return false;
+    public bool HasRoadTile(Grid grid, Vector3Int position) {
+        return !grid.TileEmpty(position);
     }
 
-    private Sprite GetCurrentSprite(Vector3Int location, Tilemap tilemap) {
-        int mask = HasRoadTile(tilemap, location + new Vector3Int(0, 1, 0)) ? 1 : 0; // Top;
-        mask += HasRoadTile(tilemap, location + new Vector3Int(1, 0, 0)) ? 2 : 0; // Right
-        mask += HasRoadTile(tilemap, location + new Vector3Int(0, -1, 0)) ? 4 : 0; // Bottom
-        mask += HasRoadTile(tilemap, location + new Vector3Int(-1, 0, 0)) ? 8 : 0; // Left
+    private Sprite GetCurrentSprite(Vector3Int location, Grid grid) {
+        int mask = HasRoadTile(grid, location + new Vector3Int(0, 1, 0)) ? 1 : 0; // Top;
+        mask += HasRoadTile(grid, location + new Vector3Int(1, 0, 0)) ? 2 : 0; // Right
+        mask += HasRoadTile(grid, location + new Vector3Int(0, -1, 0)) ? 4 : 0; // Bottom
+        mask += HasRoadTile(grid, location + new Vector3Int(-1, 0, 0)) ? 8 : 0; // Left
         int index = GetIndex((byte)mask);
         currentMaskIndex = index;
         if (index >= 0 && index < m_Sprites.Length) {

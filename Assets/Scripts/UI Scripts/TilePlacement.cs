@@ -8,22 +8,22 @@ public class TilePlacement : MonoBehaviour
     public Tilemap ground;
     public Tilemap overlay;
     public Tilemap tilemap_road;
-
-    public RoadTileManager roadTileManager;
+    public Grid grid;
+    public RoadGrid roadGrid;
 
     public TileBase overlayTile;
 
-    public GameObject road;
+    public GridTile road;
 
     Vector3Int start;
     Vector3Int stop;
-    Pathfinding pathfinding = new Pathfinding();
+    PathfindingTester pathfindingTester = new PathfindingTester();
 
     Vector3Int prevPos;
     // Start is called before the first frame update
     void Start()
     {
-        
+        pathfindingTester.roadGrid = roadGrid;
     }
 
     // Update is called once per frame
@@ -40,55 +40,45 @@ public class TilePlacement : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Mouse0)) {
-            if (GetObjectsInCell(tilemap_road, tilemap_road.transform, overlayPos).Count == 0 && tilemap_road.GetTile(overlayPos) == null) {
-                // GameObject i = Instantiate(road);
-                // i.transform.position = tilemap_road.CellToWorld(overlayPos);
-                // i.transform.position = new Vector3(i.transform.position.x, i.transform.position.y + .25f, i.transform.position.z);
-                // i.transform.SetParent(tilemap_road.transform);
-                roadTileManager.CreateRoad(road, tilemap_road, overlayPos);
+            if (grid.TileEmpty(overlayPos)) {
+                grid.AddTile(overlayPos, Instantiate(road));
             }
         }
 
         if (Input.GetKey(KeyCode.Mouse1)) {
-            if (roadTileManager.roads.ContainsKey(overlayPos)) {
-                roadTileManager.RemoveRoad(tilemap_road, overlayPos);
-            } else if (GetObjectsInCell(tilemap_road, tilemap_road.transform, overlayPos).Count != 0) {
-                Destroy(GetObjectsInCell(tilemap_road, tilemap_road.transform, overlayPos)[0]);
-            } else {
-                tilemap_road.SetTile(overlayPos, null);
+            if (!grid.TileEmpty(overlayPos)) {
+                grid.RemoveTile(overlayPos, true);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.P)) {
+            grid.LoadTiles();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N)) {
+            roadGrid.ShadeColor(Color.blue);
+        }
+
+        if (Input.GetKeyDown(KeyCode.M)) {
+            roadGrid.ShadeColor(Color.white);
         }
 
         if (Input.GetKeyDown(KeyCode.J)) {
-            Debug.Log(start);
-            if (roadTileManager.roads.ContainsKey(start) ) {
-                roadTileManager.roads[start].spriteRenderer.color=Color.white;
-            }
-            start = overlayPos;
-            roadTileManager.roads[overlayPos].spriteRenderer.color=Color.green;
+            Debug.Log(roadGrid.TileEmpty(overlayPos));
+            pathfindingTester.SetStart(roadGrid.GetTile(overlayPos));
         }
-        if (Input.GetKeyDown(KeyCode.K)) {
-            if (roadTileManager.roads.ContainsKey(stop)) {
-                roadTileManager.roads[stop].spriteRenderer.color=Color.white;
-            }
-            stop = overlayPos;
-            roadTileManager.roads[overlayPos].spriteRenderer.color=Color.blue;
-        }
-        if (Input.GetKeyDown(KeyCode.L)) {
-            pathfinding.grid = roadTileManager.roads;
-            pathfinding.FindPath(start, stop);
-        }
-        if (Input.GetKeyDown(KeyCode.I)) {
-            foreach(RoadDisplay road in roadTileManager.roads.Values) {
-                road.spriteRenderer.color = Color.white;
-            }
 
-            if (roadTileManager.roads.ContainsKey(start)) {
-                roadTileManager.roads[start].spriteRenderer.color=Color.green;
-            }
-            if (roadTileManager.roads.ContainsKey(stop)) {
-                roadTileManager.roads[stop].spriteRenderer.color=Color.blue;
-            }
+        if (Input.GetKeyDown(KeyCode.K)) {
+            pathfindingTester.SetStop(roadGrid.GetTile(overlayPos));
+        }
+
+        if (Input.GetKeyDown(KeyCode.L)) {
+            pathfindingTester.FindPath();
+        }
+
+        if (Input.GetKeyDown(KeyCode.I)) {
+            pathfindingTester.ResetColors(Color.white);
+            pathfindingTester.ColorPoints();
         }
     }
 
@@ -99,19 +89,5 @@ public class TilePlacement : MonoBehaviour
         return tilemap.WorldToCell(worldPoint);
 
         
-    }
-
-    public List<GameObject> GetObjectsInCell(Tilemap grid, Transform parent, Vector3Int position) {
-        var results = new List<GameObject>();
-        var childCount = parent.childCount;
-        for (var i = 0; i < childCount; i++)
-        {
-            var child = parent.GetChild(i);
-            if (position == grid.WorldToCell(child.position))
-            {
-                results.Add(child.gameObject);
-            }
-        }
-        return results;
     }
 }

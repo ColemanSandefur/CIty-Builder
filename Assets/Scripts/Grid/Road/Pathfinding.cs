@@ -5,19 +5,23 @@ using UnityEngine;
 public class Pathfinding
 {
     private const int MOVE_STRAIGHT_COST = 10;
-    public Dictionary<Vector3Int, RoadDisplay> grid = new Dictionary<Vector3Int, RoadDisplay>();
-    private List<RoadDisplay> openList;
-    private List<RoadDisplay> closedList;
+    public Dictionary<Vector3Int, RoadTile> grid = new Dictionary<Vector3Int, RoadTile>();
+    private List<RoadTile> openList;
+    private List<RoadTile> closedList;
     private bool debug = true;
 
-    public List<RoadDisplay> FindPath(Vector3Int startPos, Vector3Int stopPos) {
-        RoadDisplay startNode = grid[startPos];
-        RoadDisplay endNode = grid[stopPos];
+    public List<RoadTile> FindPath(Vector3Int startPos, Vector3Int stopPos) {
+        if (debug) {
+            Debug.Log($"Start: {startPos}; Stop: {stopPos}");
+        }
+        
+        RoadTile startNode = grid[startPos];
+        RoadTile endNode = grid[stopPos];
 
-        openList = new List<RoadDisplay> {startNode};
-        closedList = new List<RoadDisplay>();
+        openList = new List<RoadTile> {startNode};
+        closedList = new List<RoadTile>();
 
-        foreach (RoadDisplay road in grid.Values) {
+        foreach (RoadTile road in grid.Values) {
             road.gCost = int.MaxValue;
             road.CalculateFCost();
             road.cameFromNode = null;
@@ -28,7 +32,7 @@ public class Pathfinding
         startNode.CalculateFCost();
 
         while (openList.Count > 0) {
-            RoadDisplay currentNode = GetLowestFCostNode(openList);
+            RoadTile currentNode = GetLowestFCostNode(openList);
             if (currentNode == endNode) {
                 return CalculatePath(endNode);
             }
@@ -36,7 +40,7 @@ public class Pathfinding
             openList.Remove(currentNode);
             closedList.Add(currentNode);
             
-            foreach (RoadDisplay neighborNode in GetNeighborList(currentNode)) {
+            foreach (RoadTile neighborNode in GetNeighborList(currentNode)) {
                 if (closedList.Contains(neighborNode)) {
                     continue;
                 }
@@ -61,10 +65,10 @@ public class Pathfinding
         return null;
     }
 
-    private List<RoadDisplay> CalculatePath(RoadDisplay endNode) {
-        List<RoadDisplay> path = new List<RoadDisplay>();
+    private List<RoadTile> CalculatePath(RoadTile endNode) {
+        List<RoadTile> path = new List<RoadTile>();
         path.Add(endNode);
-        RoadDisplay currentNode = endNode;
+        RoadTile currentNode = endNode;
         if (debug) {
             endNode.spriteRenderer.color = Color.red;
         }
@@ -79,8 +83,8 @@ public class Pathfinding
         return path;
     }
 
-    private List<RoadDisplay> GetNeighborList(RoadDisplay currentNode) {
-        List<RoadDisplay> neighborList = new List<RoadDisplay>();
+    private List<RoadTile> GetNeighborList(RoadTile currentNode) {
+        List<RoadTile> neighborList = new List<RoadTile>();
 
         if (grid.ContainsKey(currentNode.location + new Vector3Int(0, 1, 0))) { //top
             neighborList.Add(grid[currentNode.location + new Vector3Int(0, 1, 0)]);
@@ -97,7 +101,7 @@ public class Pathfinding
         
         if (debug) {
             Debug.Log($"{currentNode.location} found {neighborList.Count} neighbors");
-            foreach (RoadDisplay road in neighborList) {
+            foreach (RoadTile road in neighborList) {
                 Debug.Log($"Found neighbor at {road.location}");
             }
         }
@@ -111,12 +115,12 @@ public class Pathfinding
         return MOVE_STRAIGHT_COST * (xDistance + yDistance);
     }
 
-    private RoadDisplay GetLowestFCostNode(List<RoadDisplay> roadNodeList) {
-        RoadDisplay lowestFCostNode = roadNodeList[0];
+    private RoadTile GetLowestFCostNode(List<RoadTile> roadNodeList) {
+        RoadTile lowestFCostNode = roadNodeList[0];
 
-        foreach(RoadDisplay roadDisplay in roadNodeList) {
-            if (roadDisplay.fCost < lowestFCostNode.fCost) {
-                lowestFCostNode = roadDisplay;
+        foreach(RoadTile RoadTile in roadNodeList) {
+            if (RoadTile.fCost < lowestFCostNode.fCost) {
+                lowestFCostNode = RoadTile;
             }
         }
 
