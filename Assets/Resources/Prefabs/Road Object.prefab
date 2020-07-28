@@ -100,8 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8488f9fa66f7f1540b65dd3c317353cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteMask: {fileID: 6637905991771760091}
+  location: {x: 0, y: 0, z: 0}
+  sprite: {fileID: 0}
   spriteRenderer: {fileID: 6637905992099521426}
+  roadGrid: {fileID: 0}
+  spriteMask: {fileID: 6637905991771760091}
   roadMaterial: {fileID: 0}
   currentMaskIndex: 0
   m_Sprites:
@@ -117,6 +120,10 @@ MonoBehaviour:
   - {fileID: -3733295012427959112, guid: c1d6496c0567b994ab3f961d9bff6a8e, type: 3}
   - {fileID: 8353191706765478533, guid: c1d6496c0567b994ab3f961d9bff6a8e, type: 3}
   - {fileID: 4397130717518938134, guid: c1d6496c0567b994ab3f961d9bff6a8e, type: 3}
+  gCost: 0
+  hCost: 0
+  fCost: 0
+  cameFromNode: {fileID: 0}
 --- !u!1 &6637905992099521424
 GameObject:
   m_ObjectHideFlags: 0

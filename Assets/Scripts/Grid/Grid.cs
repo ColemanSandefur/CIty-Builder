@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour
     public System.Type type;
     public GridTile prefab;
     protected Tilemap tilemap;
+    public int layer;
 
     // Start is called before the first frame update
     void Start()
@@ -69,7 +70,7 @@ public class Grid : MonoBehaviour
     public virtual void SetTile(Vector3Int location, GridTile tile) {
         tile.transform.position = tilemap.CellToWorld(location) + new Vector3(0, .25f, 0);
         tile.transform.SetParent(tilemap.transform);
-        tile.spriteRenderer.sortingOrder = 1;
+        tile.spriteRenderer.sortingOrder = layer;
         tile.location = location;
         tiles[location] = tile;
 

@@ -39,17 +39,13 @@ public class TilePlacement : MonoBehaviour
             overlay.SetTile(overlayPos, overlayTile);
         }
 
-        if (Input.GetKey(KeyCode.Mouse0)) {
-            if (grid.TileEmpty(overlayPos)) {
-                grid.AddTile(overlayPos, Instantiate(road));
-            }
-        }
+        // if (Input.GetKey(KeyCode.Mouse0)) {
+        //     AddTile();
+        // }
 
-        if (Input.GetKey(KeyCode.Mouse1)) {
-            if (!grid.TileEmpty(overlayPos)) {
-                grid.RemoveTile(overlayPos, true);
-            }
-        }
+        // if (Input.GetKey(KeyCode.Mouse1)) {
+        //     RemoveTile();
+        // }
 
         if (Input.GetKeyDown(KeyCode.P)) {
             grid.LoadTiles();
@@ -82,12 +78,32 @@ public class TilePlacement : MonoBehaviour
         }
     }
 
+    public void AddTile() {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = - Camera.main.transform.localPosition.z;
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);
+        
+        Vector3Int overlayPos = MouseToTilePos(overlay);
+        if (grid.TileEmpty(overlayPos)) {
+            grid.AddTile(overlayPos, Instantiate(road));
+        }
+    }
+
+    public void RemoveTile() {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = - Camera.main.transform.localPosition.z;
+        Vector3 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);
+        
+        Vector3Int overlayPos = MouseToTilePos(overlay);
+        if (!grid.TileEmpty(overlayPos)) {
+            grid.RemoveTile(overlayPos, true);
+        }
+    }
+
     static Vector3Int MouseToTilePos(Tilemap tilemap) {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = - Camera.main.transform.localPosition.z;
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);
         return tilemap.WorldToCell(worldPoint);
-
-        
     }
 }
