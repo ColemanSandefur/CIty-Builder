@@ -102,7 +102,12 @@ public class TilePlacement : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.R)) {
-            ChangeRotation(1);
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                ChangeRotation(-1);
+            } else {
+                ChangeRotation(1);
+            }
+            
         }
 
         
@@ -151,6 +156,10 @@ public class TilePlacement : MonoBehaviour
         x += times;
         if (x >= Enum.GetValues(typeof(Rotation)).GetLength(0)) {
             x -= Enum.GetValues(typeof(Rotation)).GetLength(0);
+        }
+
+        if (x < 0) {
+            x += Enum.GetValues(typeof(Rotation)).GetLength(0);
         }
         rotation = (Rotation)x;
 
