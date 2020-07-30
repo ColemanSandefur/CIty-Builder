@@ -54,6 +54,15 @@ public class Grid : MonoBehaviour
         return null;
     }
 
+    public Grid GetSubGrid(GridTile tileType) {
+        foreach (Grid grid in subGrids) {
+            if (grid.GetType() == tileType.GetType()) {
+                return grid;
+            }
+        }
+        return null;
+    }
+
     /*
      * Modify tiles
      */
@@ -139,6 +148,13 @@ public class Grid : MonoBehaviour
         foreach (GridTile tile in GetComponentsInChildren<GridTile>()) {
             AddTile(tile.location, tile);
         }
+    }
+
+    public void ClearAllTiles(bool destroy) {
+        foreach (GridTile tile in tiles.Values) {
+            Destroy(tile);
+        }
+        tiles.Clear();
     }
 
     /*
