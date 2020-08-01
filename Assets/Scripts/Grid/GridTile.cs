@@ -5,10 +5,18 @@ using UnityEngine;
 
 public class GridTile : MonoBehaviour
 {
-    public Vector3Int location;
+    /*
+        Object References
+    */
     public Sprite sprite;
-
     public SpriteRenderer spriteRenderer;
+
+    /*
+        Local Variables
+    */
+    public Vector3Int location;
+    public int cost;
+    public int destroyCost;
     
     public virtual void SetSprite(Sprite sprite) {
         this.sprite = sprite;

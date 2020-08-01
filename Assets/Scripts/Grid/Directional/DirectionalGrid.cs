@@ -26,9 +26,9 @@ public class DirectionalGrid : Grid
         DirectionalTile directionalTile = (DirectionalTile) tile;
         tiles[location] = directionalTile;
         directionalTile.transform.SetParent(this.transform);
-        if (directionalTile.name.IndexOf("(Clone)") > -1) {
-            directionalTile.name = directionalTile.name.Substring(0, directionalTile.name.IndexOf("(Clone)")) + location;
-        }
+        // if (directionalTile.name.IndexOf("(Clone)") > -1) {
+        //     directionalTile.name = directionalTile.name.Substring(0, directionalTile.name.IndexOf("(Clone)")) + location;
+        // }
         directionalTile.SetRotation(Rotation.NORTH);
         UpdateNeighbors(location);
     }

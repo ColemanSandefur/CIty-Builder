@@ -100,9 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8488f9fa66f7f1540b65dd3c317353cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: {x: 0, y: 0, z: 0}
   sprite: {fileID: 0}
   spriteRenderer: {fileID: 6637905992099521426}
+  location: {x: 0, y: 0, z: 0}
+  cost: 20
   roadGrid: {fileID: 0}
   spriteMask: {fileID: 6637905991771760091}
   roadMaterial: {fileID: 21300000, guid: 12a8892b172f7b543bd4f932b33fad31, type: 3}

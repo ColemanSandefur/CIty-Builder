@@ -6,27 +6,34 @@ using UnityEngine.Tilemaps;
 
 public class TilePlacement : MonoBehaviour
 {
-    public Tilemap ground;
-    public Tilemap overlay;
-    public Tilemap tilemap_road;
-    public Grid grid;
-    public RoadGrid roadGrid;
-    public Grid overlayGrid;
+    public Tilemap overlay; //Used to get relative coordinates
+    public Grid grid; //Main building grid
+    public Grid overlayGrid; //Grid for overlays
+    public TileBase overlayTile; //Tile displayed if tile is occupied
+    public GridTile gridTile; //Current Tile to be placed
+    public TerrainGeneration terrainGeneration; //Controls terrain generation
+    public CityStats cityStats; //Controls all CityStats
 
-    public TileBase overlayTile;
-
-    public GridTile gridTile;
-
+    /*
+        Pathfinding test variables
+    */
     Vector3Int start;
     Vector3Int stop;
     PathfindingTester pathfindingTester = new PathfindingTester();
+
+    /*
+        Local variables for tile placement
+    */
     Rotation rotation;
     Vector3Int prevPos;
+    RoadGrid roadGrid;
+    
 
     bool overlayPlaced = false;
     // Start is called before the first frame update
     void Start()
     {
+        roadGrid = (RoadGrid) grid.GetSubGrid(typeof(RoadGrid));
         pathfindingTester.roadGrid = roadGrid;
     }
 
@@ -42,7 +49,7 @@ public class TilePlacement : MonoBehaviour
         if (!prevPos.Equals(overlayPos)) {
 
             //Remove overlay tile
-            if (overlayPlaced) {
+            if (overlayPlaced && !grid.TileEmpty(prevPos)) {
                 grid.RemoveTile(prevPos, true);
                 overlayPlaced = false;
             }
@@ -51,11 +58,17 @@ public class TilePlacement : MonoBehaviour
             if (grid.TileEmpty(overlayPos)) {
                 GridTile tile = Instantiate(gridTile);
                 if (!grid.AddTile(overlayPos, tile)) { //Remove tile if it failes
-                    Destroy(tile);
+                    Destroy(tile.gameObject);
                 } else {
                     overlayPlaced = true;
                     if (tile is DirectionalTile) {
                         ((DirectionalTile) tile).SetRotation(rotation);
+                    }
+
+                    if (tile.cost > cityStats.Balance) {
+                        tile.spriteRenderer.color = Color.red;
+                    } else {
+                        tile.spriteRenderer.color = Color.white;
                     }
                 }
             }
@@ -63,24 +76,8 @@ public class TilePlacement : MonoBehaviour
             prevPos = overlayPos;
         }
 
-        // if (Input.GetKey(KeyCode.Mouse0)) {
-        //     AddTile();
-        // }
-
-        // if (Input.GetKey(KeyCode.Mouse1)) {
-        //     RemoveTile();
-        // }
-
         if (Input.GetKeyDown(KeyCode.P)) {
             grid.LoadTiles();
-        }
-
-        if (Input.GetKeyDown(KeyCode.N)) {
-            roadGrid.ShadeColor(Color.blue);
-        }
-
-        if (Input.GetKeyDown(KeyCode.M)) {
-            roadGrid.ShadeColor(Color.white);
         }
 
         if (Input.GetKeyDown(KeyCode.J) && !overlayPlaced) {
@@ -107,10 +104,7 @@ public class TilePlacement : MonoBehaviour
             } else {
                 ChangeRotation(1);
             }
-            
         }
-
-        
     }
 
     public void AddTile() {
@@ -119,15 +113,20 @@ public class TilePlacement : MonoBehaviour
         Vector3 worldPoint = Camera.main.ScreenToWorldPoint(mousePos);
         
         Vector3Int overlayPos = MouseToTilePos(overlay);
-        if ((prevPos.Equals(overlayPos) && overlayPlaced) || grid.TileEmpty(overlayPos)) {
+        if (((prevPos.Equals(overlayPos) && overlayPlaced) || grid.TileEmpty(overlayPos)) && gridTile.cost <= cityStats.Balance) {
             if (overlayPlaced) {
                 grid.RemoveTile(prevPos, true);
             }
+            
             overlayPlaced = false;
             GridTile tile = Instantiate(gridTile);
             if (!grid.AddTile(overlayPos, tile)) {
-                Destroy(tile);
+                Destroy(tile.gameObject);
+                return;
             }
+
+            cityStats.Balance -= gridTile.cost;
+
             if (gridTile is DirectionalTile) {
                 ((DirectionalTile) tile).SetRotation(rotation);
             }

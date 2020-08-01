@@ -27,9 +27,9 @@ public class BuildingGrid : Grid
         tiles[location] = buildingTile;
         
         buildingTile.transform.SetParent(this.transform);
-        if (buildingTile.name.IndexOf("(Clone)") > -1) {
-            buildingTile.name = buildingTile.name.Substring(0, buildingTile.name.IndexOf("(Clone)")) + location;
-        }
+        // if (buildingTile.name.IndexOf("(Clone)") > -1) {
+        //     buildingTile.name = buildingTile.name.Substring(0, buildingTile.name.IndexOf("(Clone)")) + location;
+        // }
     }
 
     public override bool RemoveTile(Vector3Int location, bool destroy) {

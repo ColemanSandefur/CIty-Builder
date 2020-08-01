@@ -68,7 +68,7 @@ public class Grid : MonoBehaviour
      */
 
     public bool AddTile(Vector3Int location, GridTile tile) {
-        if (tiles.ContainsKey(location)) {
+        if (tiles.ContainsKey(location) && tile == null) {
             return false;
         }
 
@@ -77,6 +77,12 @@ public class Grid : MonoBehaviour
     }
 
     public virtual void SetTile(Vector3Int location, GridTile tile) {
+        if (tile == null) {
+            return;
+        }
+        if (tilemap == null) {
+            tilemap = GetComponent<Tilemap>();
+        }
         tile.transform.position = tilemap.CellToWorld(location) + new Vector3(0, .25f, 0);
         tile.transform.SetParent(tilemap.transform);
         tile.spriteRenderer.sortingOrder = layer;
@@ -111,6 +117,14 @@ public class Grid : MonoBehaviour
         return true;
     }
 
+    public virtual void ClearAllTiles() {
+        foreach (GridTile tile in tiles.Values) {
+            Destroy(tile.gameObject);
+        }
+
+        tiles.Clear();
+    }
+
     public virtual GridTile GetTile(Vector3Int location) {
         return tiles[location];
     }
@@ -136,7 +150,7 @@ public class Grid : MonoBehaviour
             GridTile tile = Instantiate<GridTile>(prefab);
             tile.SetLocation(coord);
             tile.SetSprite(sprite);
-            tile.name = sprite.name;
+            // tile.name = sprite.name;
             SetTile(coord, tile);
         }
 

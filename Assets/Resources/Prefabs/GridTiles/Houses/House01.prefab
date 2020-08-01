@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5401803704081823947}
   - component: {fileID: 2750903693982381686}
   m_Layer: 0
-  m_Name: Directional Tile 1
+  m_Name: House01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4459715981863608149, guid: 89789151696b2f558ad6e5bf08056a2c,
+  m_Sprite: {fileID: 9103264062583041734, guid: 19d67d0f3185e8d14b2199ead6ab523a,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,11 +100,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373ac8994601aeea9a0e6e70b6faf2c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  location: {x: 0, y: 0, z: 0}
-  sprite: {fileID: -4459715981863608149, guid: 89789151696b2f558ad6e5bf08056a2c, type: 3}
+  sprite: {fileID: 0}
   spriteRenderer: {fileID: 5401803704081823947}
+  location: {x: 0, y: 0, z: 0}
+  cost: 200
+  destroyCost: 0
   m_Sprites:
-  - {fileID: -4459715981863608149, guid: 89789151696b2f558ad6e5bf08056a2c, type: 3}
-  - {fileID: -2218715412732081727, guid: 89789151696b2f558ad6e5bf08056a2c, type: 3}
-  - {fileID: -308794454825327058, guid: 89789151696b2f558ad6e5bf08056a2c, type: 3}
-  - {fileID: -4391110737598055023, guid: 89789151696b2f558ad6e5bf08056a2c, type: 3}
+  - {fileID: -4555541224305703043, guid: 19d67d0f3185e8d14b2199ead6ab523a, type: 3}
+  - {fileID: 8183916160894088315, guid: 19d67d0f3185e8d14b2199ead6ab523a, type: 3}
+  - {fileID: 9103264062583041734, guid: 19d67d0f3185e8d14b2199ead6ab523a, type: 3}
+  - {fileID: 4880688652556918724, guid: 19d67d0f3185e8d14b2199ead6ab523a, type: 3}

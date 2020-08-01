@@ -24,9 +24,6 @@ public class RoadGrid : Grid
         tiles[location] = roadTile;
         roadTile.roadGrid = this;
         roadTile.transform.SetParent(this.transform);
-        if (roadTile.name.IndexOf("(Clone)") > -1) {
-            roadTile.name = roadTile.name.Substring(0, roadTile.name.IndexOf("(Clone)")) + location;
-        }
         UpdateNeighbors(location);
     }
 
